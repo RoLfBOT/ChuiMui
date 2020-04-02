@@ -1,44 +1,54 @@
-import styled from '../../config/styled-components';
+import styled, { StyledProps } from '../../config/styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
+import { IButtonStyles } from 'office-ui-fabric-react/lib/Button';
 
 
 export const PrimarySwitch = withStyles({
   switchBase: {
-    color: "#1BCF8E",
+    color: "#DE4515",
     '&$checked': {
       color: "#1BCF8E",
     },
     '&$checked + $track': {
-      backgroundColor: "#DCD6D6",
-    },
+      backgroundColor: 'rgba(255, 253, 253, 0.37)'
+    }
   },
   checked: {},
-  track: {},
+  track: {
+    backgroundColor: "rgba(255, 253, 253, 0.37);"
+  },
 })(Switch);
 
-export const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 330px;
-  height: 240px;
-`;
+export const SettingsButtonStyles: Partial<IButtonStyles> = {
+  root: {
+    color: '#fff'
+  },
+  rootHovered: {
+    color: '#fff',
+    backgroundColor: 'transparent'
+  },
+  rootPressed: {
+    color: '#fff',
+    backgroundColor: 'transparent'
+  }
+};
+type DetailSectionProps = StyledProps<{ direction: 'row' | 'column' }>;
 
 export const MainHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  border-bottom: 1px solid rgba(199, 195, 195, 0.25);
 `;
 
 export const MainHeaderContent = styled.h1`
-  font-family: Segoe UI;
-  font-size: 18px;
-  line-height: 21px;
-  color: #17C4EA;
-  margin-left: 20px;
+  font-family: Ubuntu;
+  font-size: 14px;
+  line-height: 16px;
+  color: #fff;
   font-weight: bold;
+  margin-left: 20px;
 `;
 
 export const ControlGroup = styled.div`
@@ -49,28 +59,36 @@ export const ControlGroup = styled.div`
 `;
 
 export const InputIndicatorSpan = styled.span`
-  font-family: Segoe UI;
+  font-family: Space Mono;
   font-style: normal;
   font-weight: normal;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
-  color: #A59393;
+  color: #fff;
   margin: 5px;
 `;
 
 export const DetailSection = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${(props: DetailSectionProps) => props.direction };
   justify-content: flex-start;
   flex: 1;
   padding: 16px;
 `;
 
+export const DetailTextStrong = styled.b`
+  font-family: Space Mono;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  color: #fff;
+`;
 export const DetailText = styled.p`
-  font-family: Segoe UI;
+  font-family: Space Mono;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 15px;
-  color: #635C5C;
+  color: #fff;
 `;

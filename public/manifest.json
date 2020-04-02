@@ -8,11 +8,18 @@
     "default_popup": "index.html",
     "default_title": "Get Started"
   },
+  "background": {
+    "scripts": ["scripts/background.js"]
+  },
   "icons": {
-    "16": "logo16.png",
-    "48": "logo48.png"
+    "16": "logo_16.png",
+    "32": "logo_32.png",
+    "48": "logo_48.png",
+    "128": "logo_128.png"
   },
   "permissions": [
+    "storage",
+    "tabs"
   ],
   "content_security_policy": "script-src 'self' 'sha256-OvyCMyk3K99uNRC9Ifs+VnXpInNu8wyNrYB3QiX0d2k='; object-src 'self'"
 }

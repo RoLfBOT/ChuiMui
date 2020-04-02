@@ -1,24 +1,28 @@
 import * as React from 'react';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
+import { ExtensionContainer } from '../../styles';
 import {
-  MainContainer,
   MainHeader,
   MainHeaderContent,
   ControlGroup,
   InputIndicatorSpan,
   PrimarySwitch,
   DetailSection,
-  DetailText
+  DetailText,
+  DetailTextStrong,
+  SettingsButtonStyles
 } from './styles';
+import NoVideoAsset from '../../assets/novideo.svg';
+import SimonClapAsset from '../../assets/simon.gif';
 
 interface IState {
-  videoInputToggle: boolean;
+  videoInput: boolean;
 }
 
 class MainPage extends React.Component<{}, IState> {
 
   public state: IState = {
-    videoInputToggle: false
+    videoInput: false
   }
 
   constructor(props: {}) {
@@ -27,32 +31,52 @@ class MainPage extends React.Component<{}, IState> {
   }
 
   private _HandleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    this.setState({ videoInputToggle: event.target.checked });
+    this.setState({ videoInput: event.target.checked });
   }
 
   public render(): JSX.Element {
-    const { videoInputToggle } = this.state;
-    const inputIndicator = videoInputToggle ? "On" : "Off";
+    const { videoInput } = this.state;
+    const inputIndicator = videoInput ? "On" : "Off";
     return (
-      <MainContainer>
+      <ExtensionContainer padding={false}>
         <MainHeader>
-          <MainHeaderContent>Touch me not</MainHeaderContent>
+          <MainHeaderContent>CHUIMUI</MainHeaderContent>
           <ControlGroup>
             <InputIndicatorSpan>{inputIndicator}</InputIndicatorSpan>
             <label>
               <PrimarySwitch
-                checked={videoInputToggle}
+                checked={videoInput}
                 onChange={this._HandleChange}
               />
             </label>
-            <IconButton iconProps={{ iconName: 'Settings' }} />
+            <IconButton
+              iconProps={{ iconName: 'Settings' }}
+              styles={SettingsButtonStyles}
+            />
           </ControlGroup>
         </MainHeader>
-        <DetailSection>
-          <DetailText>You touched your face 6 times today</DetailText>
+        <DetailSection direction={ videoInput ? 'row' : 'column' }>
+          { this._RenderDetailsSection() }
         </DetailSection>
-      </MainContainer>
+      </ExtensionContainer>
     );
+  }
+
+  private _RenderDetailsSection(): JSX.Element {
+    const { videoInput } = this.state;
+    return !videoInput ? (
+      <React.Fragment>
+        <img src={NoVideoAsset} style={{ width: 47, height: 47, marginBottom: 9 }} alt="no video input" />
+        <DetailText>ChuiMui is off. Remember to wash your hands frequenty and avoid touching your face.</DetailText>
+      </React.Fragment>
+    ) : (
+      <React.Fragment>
+        <img src={SimonClapAsset} style={{ width: 140, height: 120, marginRight: 12, borderRadius: 9  }} alt="clap"/>
+        <DetailText>
+          You haven’t touch your face yet. <DetailTextStrong>You’re doing great!</DetailTextStrong>
+        </DetailText>
+      </React.Fragment>
+    )
   }
 }
 

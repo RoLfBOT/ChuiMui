@@ -1,18 +1,5 @@
 import styled from '../../config/styled-components';
 
-export const GetStartedContainer = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  width: 330px;
-  justify-content: space-between;
-  border-radius: 6px;
-  padding: 20px;
-  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
-  background: #6418C4;
-`;
-
 export const AppHeader = styled.div`
   height: 60px;
   display: flex;
@@ -20,7 +7,7 @@ export const AppHeader = styled.div`
 `;
 
 export const AppHeaderContent = styled.h1`
-  font-family: Space Mono;
+  font-family: Ubuntu;
   font-size: 14px;
   line-height: 15px;
   color: #fff;

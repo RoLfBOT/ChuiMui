@@ -1,9 +1,9 @@
+/*global chrome*/
+
 import * as React from 'react';
+import { ExtensionContainer } from '../../styles';
 import {
-  GetStartedContainer,
-  AppHeader,
   AppHeaderContent,
-  AppContent,
   AppDescription,
   PrimaryButton,
   MainImg
@@ -11,17 +11,31 @@ import {
 import Illustration from '../../assets/art.svg';
 
 class GetStartedPage extends React.Component<{}, {}> {
+
+  public constructor(props: {}) {
+    super(props);
+    this._handleGetStarted = this._handleGetStarted.bind(this);
+  }
+
   public render(): JSX.Element {
     return (
-      <GetStartedContainer>
-        <AppHeaderContent>ChuiMui</AppHeaderContent>
+      <ExtensionContainer padding={true}>
+        <AppHeaderContent>CHUIMUI</AppHeaderContent>
         <AppDescription>
           Touch your face too much and dont realize it? Allow ChuiMui to use your WebCam to alert you when you do.
         </AppDescription>
-        <PrimaryButton>Get Started</PrimaryButton>
+        <PrimaryButton
+          onClick={ this._handleGetStarted }
+        >
+          Get Started
+        </PrimaryButton>
         <MainImg src={Illustration} />
-      </GetStartedContainer>
+      </ExtensionContainer>
     );
+  }
+
+  private _handleGetStarted(): void {
+    window.open(chrome.extension.getURL("mediaPermission.html"), "_blank");
   }
 }
 
