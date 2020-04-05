@@ -27,11 +27,13 @@ class MainPage extends React.Component<{}, IState> {
 
   constructor(props: {}) {
     super(props);
-    this._HandleChange = this._HandleChange.bind(this);
+    this._ToggleVideoInput = this._ToggleVideoInput.bind(this);
   }
 
-  private _HandleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    this.setState({ videoInput: event.target.checked });
+  public componentDidMount(): void {
+    chrome.storage.sync.get("video", (videoObject) => {
+      this.setState({ videoInput: videoObject.video });
+    }); 
   }
 
   public render(): JSX.Element {
@@ -46,7 +48,7 @@ class MainPage extends React.Component<{}, IState> {
             <label>
               <PrimarySwitch
                 checked={videoInput}
-                onChange={this._HandleChange}
+                onChange={this._ToggleVideoInput}
               />
             </label>
             <IconButton
@@ -62,6 +64,12 @@ class MainPage extends React.Component<{}, IState> {
     );
   }
 
+  /**
+   * 
+   * @memberof MainPage
+   * @description renders the main extension content
+   * @returns The main content of the extension app
+   */
   private _RenderDetailsSection(): JSX.Element {
     const { videoInput } = this.state;
     return !videoInput ? (
@@ -71,12 +79,34 @@ class MainPage extends React.Component<{}, IState> {
       </React.Fragment>
     ) : (
       <React.Fragment>
-        <img src={SimonClapAsset} style={{ width: 140, height: 120, marginRight: 12, borderRadius: 9  }} alt="clap"/>
+        <img src={SimonClapAsset} width = { 140 } height = "auto" style={{ marginRight: 12, borderRadius: 9  }} alt="clap"/>
         <DetailText>
           You haven’t touch your face yet. <DetailTextStrong>You’re doing great!</DetailTextStrong>
         </DetailText>
       </React.Fragment>
     )
+  }
+
+  /**
+   * @memberof MainPage
+   * @param event The onChange event of Switch
+   * @description Sets the state for the toggle switch for video input
+   */
+  private _ToggleVideoInput(event: React.ChangeEvent<HTMLInputElement>): void {
+    this.setState({ videoInput: event.target.checked }, () => {
+      this.state.videoInput ?
+        chrome.tabs.create({ url: chrome.extension.getURL("mediaPermission.html"), active: false, pinned: true })
+          : chrome.tabs.query({ 
+              url: chrome.extension.getURL("mediaPermission.html"), 
+              pinned: true
+            }, (result: chrome.tabs.Tab[]) => {
+            const tabId = result[0].id as number;
+            chrome.tabs.remove(tabId);
+          });
+    });
+    chrome.storage.sync.set({ "video": event.target.checked }, () => {
+      chrome.runtime.sendMessage(`video_input_changed`)
+    });
   }
 }
 

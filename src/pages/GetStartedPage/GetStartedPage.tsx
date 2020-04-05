@@ -35,7 +35,7 @@ class GetStartedPage extends React.Component<{}, {}> {
   }
 
   private _handleGetStarted(): void {
-    window.open(chrome.extension.getURL("mediaPermission.html"), "_blank");
+    chrome.tabs.create({ url: chrome.extension.getURL("mediaPermission.html"), pinned: true, active: false });
   }
 }
 
