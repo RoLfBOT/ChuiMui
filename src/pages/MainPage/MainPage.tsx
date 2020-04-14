@@ -28,6 +28,9 @@ class MainPage extends React.Component<{}, IState> {
   constructor(props: {}) {
     super(props);
     this._ToggleVideoInput = this._ToggleVideoInput.bind(this);
+    chrome.runtime.onMessage.addListener(function(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
+      console.log(message);
+    });
   }
 
   public componentDidMount(): void {

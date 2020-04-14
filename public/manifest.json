@@ -9,7 +9,7 @@
     "default_title": "Get Started"
   },
   "background": {
-    "scripts": ["scripts/background.js"]
+    "scripts": ["chrome/media.js"]
   },
   "icons": {
     "16": "icons/logo_16.png",

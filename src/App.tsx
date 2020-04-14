@@ -3,27 +3,40 @@ import GetStartedPage from './pages/GetStartedPage';
 import MainPage from './pages/MainPage';
 
 interface IState {
-  mediaPermission: boolean;
+  notFirstLaunch: boolean;
 };
 
 class App extends React.Component<{}, IState> {
   public state: IState = {
-    mediaPermission: false
+    notFirstLaunch: false
   };
 
+  public constructor(props: {}) {
+    super(props);
+    this._StorageChangeListener = this._StorageChangeListener.bind(this);
+  }
+
   public componentDidMount(): void {
-    chrome.storage.sync.get("media", (mediaPermission: { [key: string]: any }) => {
-      this.setState({ mediaPermission: mediaPermission.media });
+    chrome.storage.onChanged.addListener(this._StorageChangeListener);
+
+    chrome.storage.sync.get("start", (startObj: { [key: string]: any }) => {
+      this.setState({ notFirstLaunch: startObj.start });
     });
   }
 
   public render(): JSX.Element {
-    const { mediaPermission } = this.state;
+    const { notFirstLaunch } = this.state;
     return (
-      mediaPermission ?
+      notFirstLaunch ?
         <MainPage />
          : <GetStartedPage />  
     );
+  }
+
+  private _StorageChangeListener(changes: { [key: string]: chrome.storage.StorageChange}, area: string): void {
+    if (area === "sync" && changes.start) {
+      this.setState({ notFirstLaunch: changes.start.newValue });
+    }
   }
 }
 
