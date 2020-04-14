@@ -14,29 +14,38 @@ import {
 } from './styles';
 import NoVideoAsset from '../../assets/novideo.svg';
 import SimonClapAsset from '../../assets/simon.gif';
+import FaceAsset from '../../assets/face1.gif';
 
 interface IState {
   videoInput: boolean;
+  counter: number;
 }
 
 class MainPage extends React.Component<{}, IState> {
 
   public state: IState = {
-    videoInput: false
+    videoInput: false,
+    counter: 100
   }
 
   constructor(props: {}) {
     super(props);
     this._ToggleVideoInput = this._ToggleVideoInput.bind(this);
     chrome.runtime.onMessage.addListener(function(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
-      console.log(message);
     });
+    this._StorageChangeListener = this._StorageChangeListener.bind(this);
   }
 
   public componentDidMount(): void {
+    chrome.storage.onChanged.addListener(this._StorageChangeListener);
     chrome.storage.sync.get("video", (videoObject) => {
-      this.setState({ videoInput: videoObject.video });
+      chrome.storage.sync.get("counter", (counterObject) => {
+        this.setState({ counter: counterObject.counter,
+                        videoInput: videoObject.video 
+        });
+      }); 
     }); 
+    
   }
 
   public render(): JSX.Element {
@@ -75,19 +84,33 @@ class MainPage extends React.Component<{}, IState> {
    */
   private _RenderDetailsSection(): JSX.Element {
     const { videoInput } = this.state;
+    
     return !videoInput ? (
       <React.Fragment>
         <img src={NoVideoAsset} style={{ width: 47, height: 47, marginBottom: 9 }} alt="no video input" />
         <DetailText>ChuiMui is off. Remember to wash your hands frequenty and avoid touching your face.</DetailText>
       </React.Fragment>
-    ) : (
+    ) : (this.state.counter === 0) ? (
       <React.Fragment>
         <img src={SimonClapAsset} width = { 140 } height = "auto" style={{ marginRight: 12, borderRadius: 9  }} alt="clap"/>
         <DetailText>
-          You haven’t touch your face yet. <DetailTextStrong>You’re doing great!</DetailTextStrong>
+    You haven’t touch your face yet. <DetailTextStrong>You’re doing great! {this.state.counter}</DetailTextStrong>
+        </DetailText>
+      </React.Fragment>
+    ) : (
+      <React.Fragment>
+        <img src={FaceAsset} width = { 140 } height = "auto" style={{ marginRight: 12, borderRadius: 9  }} alt="clap"/>
+        <DetailText>
+   You've touched Your face <DetailTextStrong> {this.state.counter} times</DetailTextStrong> today. <br></br>
+        <DetailTextStrong>Stop touching your face!</DetailTextStrong>
         </DetailText>
       </React.Fragment>
     )
+  }
+  private _StorageChangeListener(changes: { [key: string]: chrome.storage.StorageChange}, area: string): void {
+    if (area === "sync" && changes.counter) {
+      this.setState({ counter: changes.counter.newValue });
+    }
   }
 
   /**

@@ -35,6 +35,8 @@ class GetStartedPage extends React.Component<{}, {}> {
   }
 
   private _handleGetStarted(): void {
+    
+    chrome.storage.sync.set({"counter": 0});
     chrome.storage.sync.set({ "start": true });
   }
 }

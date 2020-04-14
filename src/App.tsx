@@ -26,6 +26,7 @@ class App extends React.Component<{}, IState> {
 
   public render(): JSX.Element {
     const { notFirstLaunch } = this.state;
+    
     return (
       notFirstLaunch ?
         <MainPage />

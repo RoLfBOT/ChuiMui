@@ -63,5 +63,17 @@ async function predict() {
   const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
   // Prediction 2: run input through teachable machine classification model
   const prediction = await model.predict(posenetOutput);
-  chrome.runtime.sendMessage(prediction);
+  //chrome.runtime.sendMessage(prediction);
+  var counter = -1;
+  var flag = 0;
+  chrome.storage.sync.get("counter", (counterObject) => {
+    counter = counterObject.counter;
+    if(prediction[0].probability < prediction[1].probability){
+      chrome.storage.sync.set({ "counter": counter + 1 });
+    }
+  });  
+}
+
+async function updateCounter(counter){
+  chrome.storage.sync.set({ "counter": counter + 1 });
 }
